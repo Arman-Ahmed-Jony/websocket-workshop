@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>WebSocket Workshop</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <style>
+    *{
+      color: rgb(36, 95, 85);
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body{
+      padding: 2rem;
+    }
+    ul{
+      list-style: inside;
+      font-size: larger;
+    }
+    #messages{
+      margin-top: 20px;
+      min-height: 200px;
+      flex: 1 1 auto;
+    }
+    #dataInput, #sendBtn{
+      height: 3rem;
+      outline: none;
+      min-width: 5rem;
+      border: 1px solid rgb(241, 241, 241);
+      border-radius: 10px;
+    }
+    #dataInput{
+      width: 30rem;
+      padding: 2px 20px;
+    }
+    #dataInput:hover{
+      border: 1px solid rgb(224, 204, 204);
+    }
+    #sendBtn{
+      background-color: rgb(182, 182, 221);
+      cursor: pointer;
+    }
+    .container{
+      display: flex;
+      flex-direction: column;
+    }
+    .header{
+      flex: 1 1 auto;
+    }
+    .footer{
+      flex: 0 1 auto;
+    }
+  </style>
+<body class="container">
+  <div class="header">
+    <h1>WEB SOCKET WORKSHOP</h1>
+    <ul>
+      <li>allows two way event-driven communication between client and server</li>
+      <li>best for real time application</li>
+    </ul>
+  </div>
+  <div id="messages"><h2>Messages</h2></div>
+  <div class="footer">
+    <input type="text" id="dataInput">
+    <button id="sendBtn" onclick="handleSendDate()">SEND</button>
+  </div>
+</body>
+<script>
+  let messages = []
+  const webSocket = new WebSocket("ws://localhost:8082");
+
+  const dataInputElm = document.querySelector("#dataInput")
+  const messagesElm = document.querySelector('#messages')
+  const sendBtnElm = document.querySelector("#sendBtn")
+  
+  webSocket.addEventListener('open', ()=>{
+    console.log('websocket opened... ');
+  })
+  webSocket.addEventListener('close', ()=> {
+    console.log('websocket closed... ')
+  })
+  webSocket.addEventListener("message", ({data}) =>{
+    const messageElm = document.createElement('div')
+    messagesElm.appendChild(messageElm)
+    messageElm.innerHTML = data
+  })
+
+  function handleSendDate(){
+    webSocket.send(dataInputElm.value)
+    dataInputElm.value = ''
+  }
+</script>
+</html>
